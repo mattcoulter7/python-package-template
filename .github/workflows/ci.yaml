@@ -16,12 +16,9 @@ concurrency:
 
 jobs:
   lint:
-    runs-on: shared-github-ubuntu-latest-small
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Install IAG CA certificate
-        uses: iag-hub/install-iag-ca-certificate-action@v1
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -41,12 +38,9 @@ jobs:
           uv run ruff format --check
 
   test:
-    runs-on: shared-github-ubuntu-latest-small
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-
-      - name: Install IAG CA certificate
-        uses: iag-hub/install-iag-ca-certificate-action@v1
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -61,4 +55,4 @@ jobs:
         run: uv sync
 
       - name: Run tests
-        run: uv run pytest -v -m "not integration"
+        run: uv run python -m pytest -v -m "not integration"

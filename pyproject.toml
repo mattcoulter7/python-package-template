@@ -1,16 +1,16 @@
 [project]
 name = "python-package-template"
 version = "0.1.1"
-description = "A template package used for shared modules across DAPE."
-authors = [{ name = "Matt Coulter", email = "Matt.Coulter@iag.com.au" }]
+description = "A template package used for shared Python modules."
+authors = [{ name = "Matt Coulter" }]
 requires-python = ">=3.11,<4.0"
 readme = "README.md"
 dependencies = []
 
 [project.urls]
-Homepage = "https://github.com/iag-dape/python-package-template"
-Documentation = "https://github.com/iag-dape/python-package-template/blob/main/README.md"
-Repository = "https://github.com/iag-dape/python-package-template"
+Homepage = "https://github.com/mattcoulter7/python-package-template"
+Documentation = "https://github.com/mattcoulter7/python-package-template/blob/main/README.md"
+Repository = "https://github.com/mattcoulter7/python-package-template"
 
 [dependency-groups]
 dev = [
@@ -22,20 +22,11 @@ dev = [
     "isort>=6.0.1,<7",
 ]
 
-[[tool.uv.index]]
-name        = "nexus"
-url         = "https://nexus3.auiag.corp/repos/repository/ddo-pypi/simple/"
-publish-url = "https://nexus3.auiag.corp/repos/repository/ddo-pypi-internal/"
-explicit    = true
-
 [tool.hatch.build.targets.sdist]
-include = ["src/dape"]
+include = ["src/python_package_template"]
 
 [tool.hatch.build.targets.wheel]
-include = ["src/dape"]
-
-[tool.hatch.build.targets.wheel.sources]
-"src/dape" = "dape"
+packages = ["src/python_package_template"]
 
 [build-system]
 requires = ["hatchling"]

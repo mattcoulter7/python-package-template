@@ -1,8 +1,8 @@
 <div align="center">
-  
+
 # Python Package Template
 
-The template repository for creating python packages, shared across DAPE.
+The template repository for creating Python packages.
 
 ![Python](https://img.shields.io/badge/Python-3.12-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![UV](https://img.shields.io/badge/UV-Fast-6E40C9?style=for-the-badge)
@@ -12,26 +12,23 @@ The template repository for creating python packages, shared across DAPE.
 ![Pytest](https://img.shields.io/badge/Pytest-Unit%2BAsync-08979C?style=for-the-badge)
 ![Coverage](https://img.shields.io/badge/Cov-Reports-08979C?style=for-the-badge)
 ![GitHub Actions](https://img.shields.io/badge/Actions-CI%2FCD-F7B500?style=for-the-badge&logo=github-actions)
-![Nexus](https://img.shields.io/badge/Nexus-Publish-6E40C9?style=for-the-badge)
+![PyPI](https://img.shields.io/badge/PyPI-Publish-3775A9?style=for-the-badge&logo=pypi&logoColor=white)
 ![Makefile](https://img.shields.io/badge/Makefile-Scripts-F7B500?style=for-the-badge)
 
-🦜🕸️
-
-[![CI](https://github.com/iag-dape/python-package-template/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/iag-dape/python-package-template/actions/workflows/ci.yaml)
+[![CI](https://github.com/mattcoulter7/python-package-template/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/mattcoulter7/python-package-template/actions/workflows/ci.yaml)
 
 </div>
 
 ---
 
 ## Template Checklist
-- [ ] Use [github-self-service](https://github.com/iag-hub/github-self-service/actions/workflows/newrepo.yml) portal to create a repository using this template.
-- [ ] Rename module `src/dape/template` -> `src/dape/your_package_name`
-- [ ] Rename tests module `src/dape/template` -> `src/dape/your_package_name`
-- [ ] Update `pyproject.toml`: `[project]` section based on your package name / versioning etc.
+- [ ] Create a repository using this template.
+- [ ] Rename module `src/python_package_template` -> `src/your_package_name`
+- [ ] Rename tests module `tests/python_package_template` -> `tests/your_package_name`
+- [ ] Update `pyproject.toml`: `[project]` section based on your package name, versioning, and metadata.
 - [ ] Update `README.md` references of `python-package-template` -> `your-package-name`
-- [ ] Add your team nexus credentials as `HTTP_BASIC_NEXUS_USERNAME` & `HTTP_BASIC_NEXUS_PASSWORD` repository variables / secrets respectively. These will be need for the nexus publish cd workflow to succeed.
-- [ ] Publish your package to nexus by creating a release.
-- [ ] Register your package in the [python-package-index](https://github.com/iag-dape/python-package-index) repo via the [pyproject.toml](https://github.com/iag-dape/python-package-index/blob/main/pyproject.toml#L16-L42) and [config.yaml](https://github.com/iag-dape/python-package-index/blob/main/config.yaml). Create a PR wwhich will automatically update the readme index documentation.
+- [ ] Configure PyPI trusted publishing for the repository.
+- [ ] Publish your package to PyPI by creating a release.
 - [ ] Remove this section
 
 ---
@@ -53,7 +50,7 @@ The template repository for creating python packages, shared across DAPE.
 
 ## Introduction
 
-This template repository aims to create a reusable package template which streamlines the creation and publishing of isolated python packages in DAPE. This is aligned with the engineering vision @ IAG for better modularisation and reusability of code.
+This template repository aims to streamline the creation, testing, and publishing of isolated Python packages.
 
 ---
 
@@ -91,66 +88,38 @@ If you are adding a new dev dependency, please run:
 uv add --dev {your-new-package}
 ```
 
-### Namespaces
+### Package module
 
-Packages all share the same namespace `dape`. To import this package into your project:
+Import this package into your project:
 
 ```python
-from dape.template import placeholder_func
+from python_package_template.placeholder import placeholder_func
 ```
-
-We encourage you to make your package available to all of dape via this `dape` namespace. The goal is to streamline development, POCs and overall collaboration.
 
 ---
 
 ## Usage
 
 ### Adding the dependency to your project
-The library is available on Nexus. You can install it using the following command:
+The library is available on PyPI. You can install it using the following command:
 
 **Using pip**:
 
 ```shell
-pip install --index-url https://nexus3.auiag.corp/repos/repository/ddo-pypi/ python-package-template
+pip install python-package-template
 ```
 
 **Using UV**
 
-Note: there is currently no nice way like poetry, hence we still needd to provide the full url.
-https://github.com/astral-sh/uv/issues/10140
-
-Add the dependency
+Add the dependency:
 ```shell
-uv add --index nexus=https://nexus3.auiag.corp/repos/repository/ddo-pypi/simple/ python-package-template
-```
-
-You should see the following added to your `pyproject.toml` file:
-```toml
-[[tool.uv.index]]
-name    = "nexus"
-url     = "https://nexus3.auiag.corp/repos/repository/ddo-pypi/simple"
-explicit = true
-```
-
-Andd the package is pinned to that nexus index.
-```toml
-[tool.uv.sources]
-python-package-template = { index = "nexus" }
+uv add python-package-template
 ```
 
 **Using poetry**:
 
-Add this to the `pyproject.toml` file:
-```toml
-[[tool.poetry.source]]
-name = "nexus"
-url = "https://nexus3.auiag.corp/repos/repository/ddo-pypi/simple"
-priority = "supplemental"
-```
-
-Then run the following command to install the package:
 ```shell
-poetry add --source nexus python-package-template
+poetry add python-package-template
 ```
 
 ### How tos
@@ -160,10 +129,10 @@ poetry add --source nexus python-package-template
 ```python
 # Please update this based on your package!
 
-from dape.template import placeholder_func
+from python_package_template.placeholder import placeholder_func
 
 if __name__ == "__main__":
-    print("This is a placeholder: ", placeholdder_func())
+    print("This is a placeholder: ", placeholder_func())
 ```
 
 ---
@@ -182,18 +151,16 @@ You can manually use these commands too:
 
 ## CICD
 
-### Publishing to Nexus
+### Publishing to PyPI
 
-We publish to nexus using Github releases. Steps are as follows:
+We publish to PyPI using GitHub releases and PyPI trusted publishing. Steps are as follows:
 
 1. Manually update the version in `pyproject.toml` file using a PR and merge to main. Use `uv version --bump {patch/minor/major}` to update the version.
-2. Create a new release in Github with the tag name as the version number. This will trigger the `publish` workflow. In the Release window, type in the version number and it will prompt to create a new tag.
-3. Verify the release in [Nexus](https://nexus3.auiag.corp/repos/#browse/browse:ddo-pypi-internal:python-package-template)
+2. Create a new release in GitHub with the tag name as the version number. This will trigger the `publish` workflow. In the Release window, type in the version number and it will prompt to create a new tag.
+3. Verify the release on PyPI.
 
 ---
 
 ## Credits
 This template repository has taken inspiration from the following repositories.
-- [lumi](https://github.com/iag-dape/lumi)
-- [casi-ragnarok](https://github.com/iag-dape/casi-ragnarok)
 - [full-stack-fastapi-template](https://github.com/fastapi/full-stack-fastapi-template)

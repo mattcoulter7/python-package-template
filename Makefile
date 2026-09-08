@@ -25,4 +25,4 @@ lint:
 
 .PHONY: test ## run unit tests on bare metal
 test:
-	uv run pytest -v -m "not integration"
+	uv run python -m pytest -v -m "not integration"

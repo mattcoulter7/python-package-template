@@ -1,0 +1,40 @@
+name: Publish to Nexus
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions: read-all
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: "${{ github.workflow }} @ ${{ github.head_ref || github.ref }} - release"
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: shared-github-ubuntu-latest-small
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install IAG CA certificate
+        uses: iag-hub/install-iag-ca-certificate-action@v1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install project Python
+        run: uv python install
+
+      - name: Build dist
+        run: uv build --no-sources
+
+      - name: Publish to Nexus
+        env:
+          UV_PUBLISH_USERNAME: ${{ vars.HTTP_BASIC_NEXUS_USERNAME }}
+          UV_PUBLISH_PASSWORD: ${{ secrets.HTTP_BASIC_NEXUS_PASSWORD }}
+        run: uv publish --index nexus --verbose
